@@ -1,17 +1,33 @@
-import { Box, Button, Typography } from "@mui/material";
 
-//import HeroBannerImage from "../assets/images/banner.png";
+import { Box, Button, Typography } from "@mui/material";
+import bgimg from "../assets/images/bgimg.png";
+
+
 
 export const HeroBanner = () => {
   return (
     <Box
       sx={{
-        mt: { lg: "212px", xs: "70px" },
-        ml: { sm: "50px" },
+       // mt: { lg: "212px", xs: "70px" },
+      //  ml: { sm: "50px" },
+        position: "relative",
+        overflow: "hidden",
       }}
-      position="relative"
       p="20px"
     >
+      <img
+        src={bgimg}
+        alt="Banner"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: -1,
+        }}
+      />
       <Typography color="#ff2625" fontWeight="600" fontSize="26px">
         Fitness Club
       </Typography>
@@ -26,14 +42,6 @@ export const HeroBanner = () => {
       <Typography fontSize="22px" lineHeight="35px" mb={4}>
         Check out the most effective exercises
       </Typography>
-      <Button
-        href="#exercises"
-        variant="contained"
-        color="error"
-        sx={{ backgroundColor: "#ff2625", padding: "10px" }}
-      >
-        Explore Exercises
-      </Button>
       <Typography
         fontWeight={600}
         color="#ff2625"
@@ -45,9 +53,6 @@ export const HeroBanner = () => {
       >
         Exercise
       </Typography>
-      
-       <img alt="Banner" className="hero-banner-img" />
-        
     </Box>
   );
 };

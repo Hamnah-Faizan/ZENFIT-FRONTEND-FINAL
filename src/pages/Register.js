@@ -22,34 +22,6 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import SignIn from "../pages/SignIn";
 
 
-/*
-axios.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-*/
-
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        ZenFit
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-
 const theme = createTheme();
 
 export const SignUp = () => {
@@ -115,11 +87,24 @@ export const SignUp = () => {
 
     const navigate = useNavigate();
 
-    const handleChange = ({ currentTarget: input }) => {
-      setCustomerData({ ...customerData, [input.name]: input.value });
+
+    const handleChange = ({ target }) => {
+      const { name, value } = target;
+  
+      let formattedValue = value;
+      if (name === "dateofbirth") {
+        const date = new Date(value);
+        formattedValue = date.toISOString().split("T")[0];
+      }
+  
+      setCustomerData((prevData) => ({
+        ...prevData,
+        [name]: formattedValue,
+      }));
     };
 
     const handleSubmit = async (event) => {
+      console.log("Customer Data"+customerData);
       event.preventDefault();
   
       try {
@@ -132,7 +117,7 @@ export const SignUp = () => {
         const url = "http://localhost:8000/User/signup";
         console.log(customerData)
         await axios.post(url, customerData, config).then((response)=> {
-          console.log(response.customerData)
+          console.log(response.data)
           localStorage.setItem("token", customerData);
           console.log(localStorage.getItem('token'));
           navigate("/login");
@@ -151,57 +136,28 @@ export const SignUp = () => {
 
 
     return (
-      <div>
-        <h2>Customer Signup Form</h2>
-        <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      //height: '200vh',
-      maxWidth: "100%", maxHeight: "100%"
-    }}
-  >
-    <ThemeProvider theme={theme}>
-   
-    <Grid container component="main" sx={{ maxWidth: 'xs' }}>
-        <CssBaseline />
-        <Grid
-         
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: `url(${signupimg})`,
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-           
-          }}
-        />
-        
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-          <Avatar sx={{ m: 1, bgcolor: 'teal' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', maxWidth: "100%", maxHeight: "100%", backgroundImage: `url(${signupimg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <ThemeProvider theme={theme}>
+        <Grid container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+            <Box
+              sx={{
+                my: 8,
+                mx: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+
+              <Typography component="h1" variant="h5">
+                Sign up
+              </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 
-       
-              <Grid item xs={12} >
+          <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} >
                 <TextField
                 type="text"
                 value={customerData.firstname}
@@ -215,7 +171,7 @@ export const SignUp = () => {
                   autoFocus                  
                 />
               </Grid>
-              <Grid item xs={12} >
+              <Grid item xs={12} sm={6} >
                 <TextField
                 type="text"
                 value={customerData.lastname}
@@ -227,6 +183,7 @@ export const SignUp = () => {
                   label="Last Name"
                   name="lastname"
                 />
+              </Grid>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -272,7 +229,7 @@ export const SignUp = () => {
               <form onSubmit={handleSubmit}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Gender</FormLabel>
-                  <RadioGroup aria-label="gender" name="gender" value={customerData.gender} onChange={handleChange} >
+                  <RadioGroup aria-label="gender" name="gender" value={customerData.gender} onChange={handleChange} row>
                     <FormControlLabel value="female" control={<Radio style={{ color: 'teal' }} />} label="Female" />
                     <FormControlLabel value="male" control={<Radio style={{ color: 'teal' }} />} label="Male" />
                     <FormControlLabel value="other" control={<Radio style={{ color: 'teal' }} />} label="Other" />            
@@ -290,7 +247,9 @@ export const SignUp = () => {
                     fullWidth
                     name="dateofbirth"
                     id="dateofbirth"
-               
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                   />
                   <TextField
                 type="number"
@@ -314,27 +273,20 @@ export const SignUp = () => {
                     name="height"
                     label="Height"
                     id="height"                
-                  />
-              
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="agreeTerms" style={{ color: 'teal' }} />}
-                  label="I agree to the terms and conditions"
-                  required
-                />
-              </Grid>   
+                  />  
               <div>
       <Button
+      onClick={handleSubmit}
         fullWidth
         style={{ backgroundColor: "teal", color: "white", padding: "10px 20px", borderRadius: "5px", border: "none" }}
         sx={{ mt: 3, mb: 2 }}
       >
         Sign Up
       </Button>
-
+      {error && <div>{error}</div>}
       <Grid container justifyContent="flex-end">
         <Grid item>
-          <Link component={RouterLink} to="/signin" variant="body2" style={{ color: "teal" }}>
+          <Link component={RouterLink} to="/login" variant="body2" style={{ color: "teal" }}>
             Already have an account? Sign in
           </Link>
         </Grid>
@@ -346,16 +298,13 @@ export const SignUp = () => {
         </div>
       )}
     </div>
-                      
-            <Copyright sx={{ mt: 5 }} />
           </Box>
         </Box>
         </Grid>
-        </Grid>      
+        </Grid>       
     </ThemeProvider>
     </div>
 
-      </div>
     );
   }
 
@@ -372,8 +321,8 @@ export const SignUp = () => {
       email: "",
       password: "",
       gender: "",
-      specialization: "",
-      description: "",
+      trainer_specialization: "",
+      trainer_description: "",
     });
 
 
@@ -410,53 +359,24 @@ export const SignUp = () => {
     };
 
     return (
-      <div>
-        <h2>Trainer Signup Form</h2>
-        
-        <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      maxWidth: "100%", maxHeight: "100%"
-    }}
-  >
-    <ThemeProvider theme={theme}>
-   
-      <Grid container component="main" maxWidth="xs" >
-        <CssBaseline />
-        <Grid
-         
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: `url(${signupimg})`,
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-           
-          }}
-        />
-        
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-          <Avatar sx={{ m: 1, bgcolor: 'teal' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', maxWidth: "100%", maxHeight: "100%", backgroundImage: `url(${signupimg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <ThemeProvider theme={theme}>
+        <Grid container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+            <Box
+              sx={{
+                my: 8,
+                mx: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+
+              <Typography component="h1" variant="h5">
+                Sign up
+              </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 
        
@@ -530,7 +450,7 @@ export const SignUp = () => {
               <form onSubmit={handleSubmit}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Gender</FormLabel>
-                  <RadioGroup aria-label="gender" name="gender" value={trainerData.gender} onChange={handleChange} >
+                  <RadioGroup aria-label="gender" name="gender" value={trainerData.gender} onChange={handleChange} row>
                     <FormControlLabel value="female" control={<Radio style={{ color: 'teal' }} />} label="Female" />
                     <FormControlLabel value="male" control={<Radio style={{ color: 'teal' }} />} label="Male" />
                     <FormControlLabel value="other" control={<Radio style={{ color: 'teal' }} />} label="Other" />            
@@ -542,25 +462,25 @@ export const SignUp = () => {
                   <Grid item xs={12}>
                   <TextField
                   type="text"
-                  value={trainerData.specialization}
+                  value={trainerData.trainer_specialization}
                   onChange={handleChange}
                   margin="normal"
                     required
                     fullWidth
-                    name="specialization"
+                    name="trainer_specialization"
                     label="Specialization"
-                    id="specialization"
+                    id="trainer_specialization"
                   />
                   <TextField
                   type="text"
-                  value={trainerData.description}
+                  value={trainerData.trainer_description}
                   onChange={handleChange}
                   margin="normal"
                   required
                   fullWidth
-                  name="description"
+                  name="trainer_description"
                   label="Description"
-                  id="description"            
+                  id="trainer_description"            
                   />
                   
               </Grid>
@@ -573,16 +493,17 @@ export const SignUp = () => {
               </Grid>   
               <div>
       <Button
+      onClick={handleSubmit}
         fullWidth
         style={{ backgroundColor: "teal", color: "white", padding: "10px 20px", borderRadius: "5px", border: "none" }}
         sx={{ mt: 3, mb: 2 }}
       >
         Sign Up
       </Button>
-
+      {error && <div>{error}</div>}
       <Grid container justifyContent="flex-end">
         <Grid item>
-          <Link component={RouterLink} to="/signin" variant="body2" style={{ color: "teal" }}>
+          <Link component={RouterLink} to="/login" variant="body2" style={{ color: "teal" }}>
             Already have an account? Sign in
           </Link>
         </Grid>
@@ -594,8 +515,6 @@ export const SignUp = () => {
         </div>
       )}
     </div>
-                      
-            <Copyright sx={{ mt: 5 }} />
           </Box>
         </Box>
         </Grid>
@@ -603,12 +522,8 @@ export const SignUp = () => {
     </ThemeProvider>
     </div>
 
-      </div>
     );
   }
-
-
-
   
   function AdminSignupForm() {
 
@@ -660,54 +575,24 @@ export const SignUp = () => {
 
 
     return (
-      <div>
-        <h2>Admin Signup Form</h2>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', maxWidth: "100%", maxHeight: "100%", backgroundImage: `url(${signupimg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <ThemeProvider theme={theme}>
+        <Grid container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+            <Box
+              sx={{
+                my: 8,
+                mx: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
 
-        <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      //height: '200vh',
-      maxWidth: "100%", maxHeight: "100%"
-    }}
-  >
-    <ThemeProvider theme={theme}>
-   
-      <Grid container component="main" maxWidth="xs" >
-        <CssBaseline />
-        <Grid
-         
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: `url(${signupimg})`,
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-           
-          }}
-        />
-        
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-          <Avatar sx={{ m: 1, bgcolor: 'teal' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
+              <Typography component="h1" variant="h5">
+                Sign up
+              </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 
        
@@ -753,6 +638,18 @@ export const SignUp = () => {
                 />
               </Grid>
               <Grid item xs={12}>
+              <form onSubmit={handleSubmit}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Gender</FormLabel>
+                  <RadioGroup aria-label="gender" name="gender" value={adminData.gender} onChange={handleChange} >
+                    <FormControlLabel value="female" control={<Radio style={{ color: 'teal' }} />} label="Female" />
+                    <FormControlLabel value="male" control={<Radio style={{ color: 'teal' }} />} label="Male" />
+                    <FormControlLabel value="other" control={<Radio style={{ color: 'teal' }} />} label="Other" />            
+                  </RadioGroup>
+                </FormControl>
+                </form>
+              </Grid>
+              <Grid item xs={12}>
                 <TextField
                 value={adminData.email}
                 onChange={handleChange}
@@ -794,10 +691,10 @@ export const SignUp = () => {
       >
         Sign Up
       </Button>
-
+      {error && <div>{error}</div>}
       <Grid container justifyContent="flex-end">
         <Grid item>
-          <Link component={RouterLink} to="/signin" variant="body2" style={{ color: "teal" }}>
+          <Link component={RouterLink} to="/login" variant="body2" style={{ color: "teal" }}>
             Already have an account? Sign in
           </Link>
         </Grid>
@@ -809,24 +706,18 @@ export const SignUp = () => {
         </div>
       )}
     </div>
-                      
-            <Copyright sx={{ mt: 5 }} />
+
           </Box>
         </Box>
         </Grid>
         </Grid>      
     </ThemeProvider>
     </div>
-
-      </div>
-       
     
-    );
+    )
   }
 
 
     
     
     
-
-export default SignUp;

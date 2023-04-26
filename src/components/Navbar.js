@@ -6,12 +6,14 @@ import Logo from "../assets/images/Logo.png";
 export const Navbar = () => {
   return (
     <Stack
+    
       direction="row"
       justifyContent="space-around"
       sx={{
+        backgroundColor: "black",
         overflowX: "auto",
         gap: { sm: "122px", xs: "40px" },
-        mt: { sm: "32px", xs: "20px" },
+      //  mt: { sm: "32px", xs: "20px" },
         justifyContent: "none",
       }}
       px="20px"
@@ -30,41 +32,54 @@ export const Navbar = () => {
 
       <Stack direction="row" gap="40px" fontSize="24px" alignItems="flex-end">
         <NavLink
-          to="/"
+          to="/home"
           style={{
+            backgroundColor: "black",
             textDecoration: "none",
-            color: "#3a1212",
+            color: "#FFFFFF",
           }}
         >
           Home
         </NavLink>
 
-        <a
-          href="#exercises"
-          style={{ textDecoration: "none", color: "#3a1212" }}
+        <NavLink
+          to="/workout"
+          style={{ textDecoration: "none", color: "#FFFFFF", }}
         >
-          Exercises
-        </a>
+          WorkoutLibrary
+        </NavLink>
 
         <NavLink
-          to="/meal-planning"
+          to="/fitnesstracking"
           style={{
             textDecoration: "none",
-            color: "#3a1212",
+            color: "#FFFFFF",
           }}
         >
-          Meal Planning
+          Fitness Tracking
+        </NavLink>
+
+        <NavLink
+          to="/community"
+          style={{
+            textDecoration: "none",
+            color: "#FFFFFF",
+          }}
+        >
+          Community
         </NavLink>
 
         <NavLink
           to="/signup"
           style={{
             textDecoration: "none",
-            color: "#3a1212",
+            color: "#FFFFFF",
           }}
         >
           Register
         </NavLink>
+
+
       </Stack>
     </Stack>
   );

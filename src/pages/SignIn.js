@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import signinimg from "../assets/images/signinimg.png";
+import {  useNavigate } from 'react-router-dom';
 
 
 
@@ -34,9 +35,13 @@ function Copyright(props) {
 const theme = createTheme();
 
 export const SignIn = () => {
+
 	const [data, setData] = useState({
     email: "", 
-    password: "" });
+    password: "" 
+  });
+
+  const navigate = useNavigate();
 	const [error, setError] = useState("");
   
 
@@ -60,6 +65,7 @@ export const SignIn = () => {
         console.log(response.data)
         localStorage.setItem("token", data);
         console.log(localStorage.getItem('token'));
+        navigate("/home");
       })
 
     } catch (error) {
@@ -144,6 +150,7 @@ export const SignIn = () => {
                 borderRadius: '5px', 
                 border: 'none' }}
                 sx={{ mt: 3, mb: 2 }}
+                onClick={handleSubmit}
               >
                 Sign In
               </Button>

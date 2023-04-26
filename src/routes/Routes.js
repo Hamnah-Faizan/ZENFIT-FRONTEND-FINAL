@@ -1,6 +1,6 @@
 import { useRoutes } from "react-router-dom";
 import { RootLayout } from "../components/layout/RootLayout";
-import { Home, ExerciseDetail, Error, MealPlanning, SignUp, SignIn } from "../pages";
+import { Home, ExerciseDetail, Error, FitnessTracking, SignUp, SignIn } from "../pages";
 
 
 //import { Route, Routes, Navigate } from "react-router-dom";
@@ -9,9 +9,9 @@ export const exerciseRoutes = [
   {
     element: <RootLayout />,
     children: [
-      { path: "/", element: <Home /> },
+      { path: "/home", element: <Home /> },
       { path: "/exercise/:id", element: <ExerciseDetail /> },
-      { path: "/meal-planning", element: <MealPlanning /> },
+      { path: "/fitnesstracking", element: <FitnessTracking /> },
       { path: "/signup", element: <SignUp /> },
       { path: "/login", element: <SignIn /> },
     ],
