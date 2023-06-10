@@ -45,13 +45,6 @@ export const Navbar = () => {
     } else if (role === "Trainer") {
       return (
         <>
-          <NavLink
-            to="/workout"
-            className="nav-link"
-            activeClassName="active-nav-link"
-          >
-            Post Workout
-          </NavLink>
 
           <NavLink
             to="/home"
@@ -60,6 +53,15 @@ export const Navbar = () => {
           >
             Home
           </NavLink>
+          <NavLink
+            to="/workout"
+            className="nav-link"
+            activeClassName="active-nav-link"
+          >
+            Post Workout
+          </NavLink>
+
+
         </>
       );
     } else if (role === "Customer") {
@@ -101,7 +103,18 @@ export const Navbar = () => {
           >
             Register
           </NavLink>
+
+          <NavLink
+            to="/home"
+            className="nav-link"
+            activeClassName="active-nav-link"
+          >
+            Home
+          </NavLink>
+
         </>
+
+        
       );
     }
   };
