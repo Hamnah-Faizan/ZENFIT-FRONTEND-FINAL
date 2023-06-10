@@ -1,10 +1,10 @@
 
-
 import { Home } from "./Home";
-import { ExerciseDetail } from "./ExerciseDetail";
+import { WorkoutLibrary } from "./WorkoutLibrary";
 import { Error } from "./Error";
 import { FitnessTracking } from "./FitnessTracking";
 import { SignUp } from "./Register";
 import { SignIn } from "./SignIn";
+import { UserProfile } from "./UserProfile";
 
-export { Home, ExerciseDetail, FitnessTracking, Error, SignUp, SignIn };
+export { Home, WorkoutLibrary, FitnessTracking, Error, SignUp, SignIn, UserProfile };

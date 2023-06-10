@@ -1,19 +1,18 @@
 import { useRoutes } from "react-router-dom";
 import { RootLayout } from "../components/layout/RootLayout";
-import { Home, ExerciseDetail, Error, FitnessTracking, SignUp, SignIn } from "../pages";
-
-
-//import { Route, Routes, Navigate } from "react-router-dom";
+import { Home, WorkoutLibrary, Error, FitnessTracking, SignUp, SignIn } from "../pages";
+import UserProfile from "../pages/UserProfile"
 
 export const exerciseRoutes = [
   {
     element: <RootLayout />,
     children: [
       { path: "/home", element: <Home /> },
-      { path: "/exercise/:id", element: <ExerciseDetail /> },
+      { path: "/workout", element: <WorkoutLibrary /> },
       { path: "/fitnesstracking", element: <FitnessTracking /> },
       { path: "/signup", element: <SignUp /> },
       { path: "/login", element: <SignIn /> },
+      { path: "/library", element: <UserProfile /> },
     ],
   },
   { path: "*", element: <Error /> },
@@ -25,6 +24,9 @@ export const Routes = () => {
 
   return routes;
 };
+
+
+
 
 
 
